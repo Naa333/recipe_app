@@ -54,7 +54,12 @@ export function Post({
             <img
               src={image}
               alt={title}
-              style={{ width: '40%', height: '40em', display: 'block' }}
+              style={{
+                width: '40em',
+                height: '40em',
+                display: 'block',
+                objectFit: 'cover',
+              }}
               loading='lazy'
             />
           ) : (
@@ -63,9 +68,9 @@ export function Post({
                 src={image}
                 alt={title}
                 style={{
-                  width: 160,
+                  width: 120,
                   height: 120,
-                  objectFit: 'contain',
+                  objectFit: 'cover',
                   display: 'block',
                 }}
                 loading='lazy'

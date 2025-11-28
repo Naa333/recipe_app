@@ -1,6 +1,7 @@
 import { GraphQLError } from 'graphql'
 import { createUser, loginUser } from '../services/users.js'
 import { createPost } from '../services/posts.js'
+import { notifyNewPost } from '../socket.js'
 
 export const mutationSchema = `#graphql
 type Mutation {
@@ -17,7 +18,11 @@ export const mutationResolver = {
     loginUser: async (parent, { username, password }) => {
       return await loginUser({ username, password })
     },
-    createPost: async (parent, { title, contents, image, tags }, { auth }) => {
+    createPost: async (
+      parent,
+      { title, contents, image, tags },
+      { auth, io },
+    ) => {
       if (!auth) {
         throw new GraphQLError(
           'You need to be authenticated to perform this action.',
@@ -28,7 +33,14 @@ export const mutationResolver = {
           },
         )
       }
-      return await createPost(auth.sub, { title, contents, image, tags })
+      const post = await createPost(auth.sub, { title, contents, image, tags })
+
+      // Notify all connected clients about the new post
+      if (io) {
+        notifyNewPost(io, post)
+      }
+
+      return post
     },
   },
 }
