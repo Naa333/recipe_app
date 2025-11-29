@@ -10,7 +10,9 @@ import {
 import { requireAuth } from '../middleware/jwt.js'
 import { notifyNewPost } from '../socket.js'
 
+// Posts REST API routes
 export function postsRoutes(app) {
+  // GET /api/v1/posts - List posts with optional filters
   app.get('/api/v1/posts', async (req, res) => {
     const { sortBy, sortOrder, author, tag } = req.query
     const options = { sortBy, sortOrder }
@@ -32,6 +34,7 @@ export function postsRoutes(app) {
     }
   })
 
+  // GET /api/v1/posts/:id - Get single post
   app.get('/api/v1/posts/:id', async (req, res) => {
     const { id } = req.params
     try {
@@ -44,16 +47,17 @@ export function postsRoutes(app) {
     }
   })
 
+  // POST /api/v1/posts - Create post (auth required, triggers notification)
   app.post('/api/v1/posts', requireAuth, async (req, res) => {
     try {
       const post = await createPost(req.auth.sub, req.body)
-      
+
       // Notify all connected clients about the new post
       const io = req.app.get('io')
       if (io) {
         notifyNewPost(io, post)
       }
-      
+
       return res.json(post)
     } catch (err) {
       console.error('error creating post', err)

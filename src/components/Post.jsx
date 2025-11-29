@@ -6,8 +6,9 @@ import { useState } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { postTrackEvent, getTotalLikes } from '../api/events.js'
 import { useAuth } from '../contexts/AuthContext.jsx'
-import ReactMarkdown from 'react-markdown' //to format text area
+import ReactMarkdown from 'react-markdown'
 
+// Post component with image, content, and like button
 export function Post({
   title,
   contents,
@@ -21,7 +22,7 @@ export function Post({
   const [liked, setLiked] = useState(false)
   const [token] = useAuth()
 
-  // total likes for this post
+  // Get total likes for this post
   const {
     data: totalLikesData,
     isLoading: likesLoading,
@@ -31,11 +32,10 @@ export function Post({
     queryFn: () => getTotalLikes(id),
   })
 
-  // Mutation for like/unlike actions
+  // Like/unlike mutation
   const likeMutation = useMutation({
     mutationFn: (action) => postTrackEvent({ postId: id, action, session }),
     onSuccess: () => {
-      // Refetch total likes when a like/unlike completes
       queryClient.invalidateQueries(['totalLikes', id])
     },
   })

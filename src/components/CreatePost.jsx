@@ -9,12 +9,14 @@ import { useAuth } from '../contexts/AuthContext.jsx'
 import { Link } from 'react-router-dom'
 import slug from 'slug'
 
+// Form for creating new posts (requires auth)
 export function CreatePost() {
   const [token] = useAuth()
   const [title, setTitle] = useState('')
   const [image, setImage] = useState('')
   const [contents, setContents] = useState('')
 
+  // GraphQL mutation to create post
   const [createPost, { loading, data }] = useGraphQLMutation(CREATE_POST, {
     variables: { title, contents, image },
     context: {
@@ -27,6 +29,7 @@ export function CreatePost() {
     e.preventDefault()
     createPost()
   }
+  
   if (!token) return <div>Please log in to create new posts.</div>
   return (
     <form onSubmit={handleSubmit}>

@@ -29,6 +29,4 @@ export function App({ children }) {
     </HelmetProvider>
   )
 }
-App.propTypes = {
-  children: PropTypes.element.isRequired,
-}
+App.propTypes = { children: PropTypes.element.isRequired }

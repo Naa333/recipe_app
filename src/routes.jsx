@@ -11,19 +11,25 @@ import { getPosts, getPostById } from './api/posts.js'
 import { ViewPost } from './pages/ViewPost.jsx'
 import { getUserInfo } from './api/users.js'
 
+// React Router routes with SSR data prefetching
 export const routes = [
   {
     path: '/',
+    // Prefetch posts and author data on server before rendering
     loader: async () => {
       const queryClient = new QueryClient()
       const author = ''
       const sortBy = 'createdAt'
       const sortOrder = 'descending'
       const posts = await getPosts({ author, sortBy, sortOrder })
+      
+      // Cache posts for React Query
       await queryClient.prefetchQuery({
         queryKey: ['posts', { author, sortBy, sortOrder }],
         queryFn: () => posts,
       })
+      
+      // Prefetch user info for all post authors
       const uniqueAuthors = posts
         .map((post) => post.author)
         .filter((value, index, array) => array.indexOf(value) === index)
@@ -33,6 +39,7 @@ export const routes = [
           queryFn: () => getUserInfo(userId),
         })
       }
+      
       return dehydrate(queryClient)
     },
     Component() {

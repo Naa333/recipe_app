@@ -5,10 +5,12 @@ import { User } from './User.jsx'
 import { useQuery } from '@tanstack/react-query'
 import { getUserInfo } from '../api/users.js'
 
+// Header with login/logout and user info
 export function Header() {
   const [token, setToken] = useAuth()
 
   const { sub } = token ? jwtDecode(token) : {}
+  
   const userInfoQuery = useQuery({
     queryKey: ['users', sub],
     queryFn: () => getUserInfo(sub),
