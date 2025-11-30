@@ -8,7 +8,6 @@ export function handleSocket(io) {
   })
 }
 
-//broadcast new post event to all connected clients
 export function notifyNewPost(io, post) {
   io.emit('post.created', {
     id: post._id,

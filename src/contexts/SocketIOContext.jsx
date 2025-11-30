@@ -28,7 +28,6 @@ export function SocketIOProvider({ children }) {
 
     // Create notification when new post is created
     socketInstance.on('post.created', (post) => {
-      // Don't show notification to the user who created the post
       let currentUserId = null
       if (token) {
         try {

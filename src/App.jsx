@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthContextProvider } from './contexts/AuthContext.jsx'
 import { SocketIOProvider } from './contexts/SocketIOContext.jsx'
-import { Notification } from './components/Notification.jsx'
 import PropTypes from 'prop-types'
 import { HelmetProvider } from 'react-helmet-async'
 import { ApolloProvider } from '@apollo/client/react/index.js'
@@ -19,10 +18,7 @@ export function App({ children }) {
       <ApolloProvider client={apolloClient}>
         <QueryClientProvider client={queryClient}>
           <AuthContextProvider>
-            <SocketIOProvider>
-              <Notification />
-              {children}
-            </SocketIOProvider>
+            <SocketIOProvider>{children}</SocketIOProvider>
           </AuthContextProvider>
         </QueryClientProvider>
       </ApolloProvider>
